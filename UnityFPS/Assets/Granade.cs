@@ -11,7 +11,6 @@ public class Granade : MonoBehaviour
         GameObject fx = Instantiate(fxParticle);
         fx.transform.position = transform.position;
 
-        DestroyObject(fx, 0.2f);
-        DestroyImmediate(gameObject);
+        Destroy(gameObject);
     }
 }

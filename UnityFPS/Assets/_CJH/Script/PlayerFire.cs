@@ -35,6 +35,12 @@ public class PlayerFire : MonoBehaviour
             //ray와 충돌했는가
             if (Physics.Raycast(ray, out hitInfo))
             {
+                //내 총알에 맞았으니 몬스터의 체력을 깎기
+                EnemyFSM enemy = hitInfo.collider.GetComponent<EnemyFSM>();
+                enemy.hitDamage(10);
+
+
+
                 Debug.Log(hitInfo.transform.name);
                 GameObject bulletImpact = Instantiate(bulletImpactFactory);
                 bulletImpact.transform.position = hitInfo.point;

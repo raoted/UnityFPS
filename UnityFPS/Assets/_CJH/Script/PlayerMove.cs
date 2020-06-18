@@ -42,7 +42,7 @@ public class PlayerMove : MonoBehaviour
         //따리서 충돌감지를 하기 위해서는 반드시
         //캐릭터 컨트롤러 컴포넌트가 제공해주는 함술 이동처리해야 한다.
         //cc.Move(dir * Time.deltaTime * speed);
-
+ 
         velocityY += gravity * Time.deltaTime;
         dir.y += velocityY;
        
