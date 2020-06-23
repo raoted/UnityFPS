@@ -6,11 +6,6 @@ public class PlayerRotate : MonoBehaviour
 {
     public float speed = 150;
     float angleX;
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
 
     // Update is called once per frame
     void Update()

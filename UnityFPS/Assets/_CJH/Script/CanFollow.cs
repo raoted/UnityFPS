@@ -11,7 +11,6 @@ public class CanFollow : MonoBehaviour
     //또한 순간이동이 아닌 슈팅게임에서 꼬랑지가 따라다니는 것 같은 효과도 연출이 가능하다.
 
     public Transform target;    //카메라가 따라다닐 타겟
-    public Transform destination;
     public float followSpeed = 0.5f;
     // Start is called before the first frame update
     void Start()
