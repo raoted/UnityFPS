@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 //몬스터 유한상태머신
 public class EnemyFSM : MonoBehaviour
@@ -41,10 +42,11 @@ public class EnemyFSM : MonoBehaviour
     Vector3 startPoint; //몬스터 시작위치
     Transform player;   //플레이어를 찾기위해(안그럼 모든 몬스터에 다 드래그앤드랍 해줘야 한다 걍 코드로 찾아서 처리하기)
     CharacterController cc; //몬스터 이동을 위해 캐릭터컨트롤러 컴포넌트
-
+    NavMeshAgent agent;
     ///몬스터 일반변수
     int hp = 100; //체력
     int att = 5; //공격력
+
     float speed = 5.0f; //이동속도
 
     //공격 딜레이
@@ -63,6 +65,9 @@ public class EnemyFSM : MonoBehaviour
         //캐릭터 컨트롤러 컴포넌트
         cc = GetComponent<CharacterController>();
         anim = transform.GetChild(0).GetComponent<Animator>();
+        agent = GetComponent<NavMeshAgent>();
+        agent.speed = speed;
+        agent.stoppingDistance = attackRange;
     }
 
     void Update()
@@ -138,7 +143,7 @@ public class EnemyFSM : MonoBehaviour
         {
             //플레이어를 추격
             //이동방향 (벡터의 뺄셈)
-            Vector3 dir = (player.position - transform.position).normalized;
+            //Vector3 dir = (player.position - transform.position).normalized;
             //dir.Normalize();
 
             //몬스터가 백스텝으로 쫓아온다
@@ -154,9 +159,9 @@ public class EnemyFSM : MonoBehaviour
             //타겟과 본인이 일직선상일경우 백덤블링으로 회전을 한다
 
             //최종적으로 자연스런 회전처리를 하려면 결국 쿼터니온을 사용해야 한다
-            transform.rotation = Quaternion.Lerp(transform.rotation,
-                Quaternion.LookRotation(dir),
-                10 * Time.deltaTime);
+            //transform.rotation = Quaternion.Lerp(transform.rotation,
+            //    Quaternion.LookRotation(dir),
+            //    10 * Time.deltaTime);
 
             //캐릭터 컨트롤러를 이용해서 이동하기
             //cc.Move(dir * speed * Time.deltaTime);
@@ -166,10 +171,14 @@ public class EnemyFSM : MonoBehaviour
             //심플무브는 최소한의 물리가 적용되어 중력문제를 해결할 수 있다
             //단 내부적으로 시간처리를 하기때문에 
             //Time.deltaTime을 사용하지 않는다
-            cc.SimpleMove(dir * speed);
+            //cc.SimpleMove(dir * speed);
+            agent.SetDestination(player.position);
         }
         else //공격범위 안에 들어옴
         {
+            agent.isStopped = true;
+            agent.velocity = Vector3.zero;
+
             state = EnemyState.Attack;
             print("상태전환 : Move -> Attack");
             anim.SetTrigger("Attack");
@@ -203,6 +212,7 @@ public class EnemyFSM : MonoBehaviour
         }
         else//현재상태를 무브로 전환하기 (재추격)
         {
+            agent.isStopped = false;
             state = EnemyState.Move;
             anim.SetTrigger("Move");
             print("상태전환 : Attack -> Move");
@@ -223,8 +233,9 @@ public class EnemyFSM : MonoBehaviour
         //도착하면 대기상태로 변경
         if (Vector3.Distance(transform.position, startPoint) > 0.1)
         {
-            Vector3 dir = (startPoint - transform.position).normalized;
-            cc.SimpleMove(dir * speed);
+            //Vector3 dir = (startPoint - transform.position).normalized;
+            //cc.SimpleMove(dir * speed);
+            agent.SetDestination(startPoint);
         }
         else
         {
