@@ -35,10 +35,11 @@ public class PlayerFire : MonoBehaviour
             //ray와 충돌했는가
             if (Physics.Raycast(ray, out hitInfo))
             {
-                if (hitInfo.transform.name.Contains("Enemy"))
+                Debug.Log(hitInfo.transform.name);
+                if (hitInfo.transform.gameObject.layer == 8)
                 {
                     //내 총알에 맞았으니 몬스터의 체력을 깎기
-                    EnemyFSM enemy = hitInfo.collider.GetComponent<EnemyFSM>();
+                    EnemyFSM enemy = hitInfo.collider.transform.parent.GetComponent<EnemyFSM>();
                     enemy.hitDamage(10);
                 }
                 Debug.Log(hitInfo.transform.name);
@@ -48,10 +49,6 @@ public class PlayerFire : MonoBehaviour
                 //파편이 부딛힌 지점이 향하는 방향으로 튀게 해줘야 한다.
                 bulletImpact.transform.forward = hitInfo.normal;
             }
-
-            int layer = gameObject.layer;
-            layer = 1 << 8 | 1 << 9 | 1 << 12;
-
         }
         //마우스우측버튼 클릭시 수류탄투척 하기
         if (Input.GetMouseButtonDown(1))

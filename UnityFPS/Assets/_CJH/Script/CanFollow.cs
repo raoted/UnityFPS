@@ -30,7 +30,7 @@ public class CanFollow : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.Alpha2))
         {
             Vector3 vec = target.position;
-            vec += new Vector3(0, 0, -10);
+            vec += new Vector3(0, 2, -3);
 
             transform.position = vec;
         }
